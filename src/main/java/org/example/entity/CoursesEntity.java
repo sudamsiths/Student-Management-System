@@ -1,11 +1,7 @@
 package org.example.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 import org.example.DTO.CoursesDTO;
 
 import java.util.Date;
@@ -17,6 +13,8 @@ import java.util.Date;
 @Entity
 @Table(name = "courses")
 public class CoursesEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String duration;

@@ -1,5 +1,9 @@
 package org.example.service;
 
+import org.example.DTO.CoursesDTO;
+
 public interface CoursesService {
-    void getAllCourses();
+    CoursesDTO addCourse(CoursesDTO courseDTO);
+
+    Object getAllCourses();
 }
