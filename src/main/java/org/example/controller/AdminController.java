@@ -15,8 +15,8 @@ public class AdminController {
     final AdminService adminService;
 
     @GetMapping("/create")
-    public void createAdmin(){
-        adminService.createAdmin();
+    public void createAdmin(AdminDTO adminDTO) {
+        adminService.createAdmin(adminDTO);
     }
 
     @PostMapping("/login")

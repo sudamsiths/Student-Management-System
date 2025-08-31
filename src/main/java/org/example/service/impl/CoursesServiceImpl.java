@@ -32,8 +32,6 @@ public class CoursesServiceImpl implements CoursesService  {
 
     @Override
     public Object getAllCourses() {
-        return courseRepository.findAll().stream()
-                .map(CoursesEntity::getDTO)
-                .toList();
+        return courseRepository.findAll();
     }
 }

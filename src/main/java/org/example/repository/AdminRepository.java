@@ -9,7 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface AdminRepository extends JpaRepository<AdminEntity , Long> {
-    AdminEntity findByRole(UserRole userRole);
-
     Optional<AdminEntity> findByEmail(String email);
 }

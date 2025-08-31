@@ -20,19 +20,9 @@ public class AdminServiceImpl implements AdminService {
 
 
     @Override
-    public void createAdmin() {
-        AdminEntity optionalAdmin = adminRepository.findByRole(UserRole.ADMIN);
-        if (optionalAdmin==null){
-            AdminEntity adminEntity = new AdminEntity();
-            adminEntity.setName("Admin");
-            adminEntity.setEmail("admin123@gmail.com");
-            adminEntity.setPassword("admin123");
-            adminEntity.setRole(UserRole.ADMIN);
-            adminRepository.save(adminEntity);
-            System.out.println("Admin user created successfully");
-        }else {
-            System.out.println("Admin user already exists");
-        }
+    public void createAdmin( AdminDTO adminDTO) {
+        AdminEntity adminEntity = modelMapper.map(adminDTO, AdminEntity.class);
+        adminRepository.save(adminEntity);
     }
 
     @Override
