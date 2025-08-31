@@ -44,5 +44,27 @@ public class StudentServiceimpl implements StudentService {
         return studentRepository.save(studentEntity);
     }
 
+    @Override
+    public void deleteStudent(Long id) {
+        studentRepository.deleteById(id);
+    }
+
+    @Override
+    public StudentEntity updateStudent(Long id, StudentDTO studentDTO) {
+        return studentRepository.findById(id).map(student -> {
+            student.setName(studentDTO.getName());
+            student.setEmail(studentDTO.getEmail());
+            student.setPassword(studentDTO.getPassword());
+            if (studentDTO.getCourseIds() != null && !studentDTO.getCourseIds().isEmpty()) {
+                HashSet<CoursesEntity> courses = new HashSet<>();
+                for (Long courseId : studentDTO.getCourseIds()) {
+                    coursesRepository.findById(courseId).ifPresent(courses::add);
+                }
+                student.setCourses(courses);
+            }
+            return studentRepository.save(student);
+        }).orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
+    }
+
 
 }
