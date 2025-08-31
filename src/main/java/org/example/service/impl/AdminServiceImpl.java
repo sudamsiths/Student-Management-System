@@ -40,4 +40,18 @@ public class AdminServiceImpl implements AdminService {
             return null;
         }
     }
+
+    @Override
+    public void UpdateAdmin(Long id, AdminDTO adminDTO) {
+        Optional<AdminEntity> optionalAdmin = adminRepository.findById(id);
+        if (optionalAdmin.isPresent()) {
+            AdminEntity adminEntity = optionalAdmin.get();
+            adminEntity.setName(adminDTO.getName());
+            adminEntity.setEmail(adminDTO.getEmail());
+            adminEntity.setPassword(adminDTO.getPassword());
+            adminRepository.save(adminEntity);
+        } else {
+            System.out.println("Admin not found with id: " + id);
+        }
+    }
 }

@@ -6,4 +6,6 @@ public interface AdminService {
     void createAdmin( AdminDTO adminDTO);
 
     AdminDTO loginAdmin(String email, String password);
+
+    void UpdateAdmin(Long id, AdminDTO adminDTO);
 }

@@ -28,4 +28,10 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateAdmin(@PathVariable Long id, @RequestBody AdminDTO adminDTO) {
+        adminService.UpdateAdmin(id, adminDTO);
+        return ResponseEntity.ok("Admin updated successfully");
+    }
 }
