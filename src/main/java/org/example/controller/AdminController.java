@@ -20,10 +20,10 @@ public class AdminController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AdminDTO> login(@RequestBody AdminDTO loginRequest) {
+    public ResponseEntity<?> login(@RequestBody AdminDTO loginRequest) {
         AdminDTO adminDTO = adminService.loginAdmin(loginRequest.getEmail(), loginRequest.getPassword());
         if (adminDTO != null) {
-            return ResponseEntity.ok(adminDTO);
+            return ResponseEntity.ok().body(adminDTO);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
