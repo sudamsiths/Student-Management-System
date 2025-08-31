@@ -2,7 +2,6 @@ package org.example.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.DTO.CoursesDTO;
 
 import java.util.Date;
 import java.util.Set;
@@ -21,5 +20,7 @@ public class CoursesEntity {
     private String duration;
     private Date startDate;
 
+    @ManyToMany(mappedBy = "courses")
+    private Set<StudentEntity> students;
 
 }

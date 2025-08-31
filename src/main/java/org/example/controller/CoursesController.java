@@ -24,11 +24,7 @@ public class CoursesController {
         }
     }
     @GetMapping("/api/getAllCourses")
-    public ResponseEntity<?> getAllCourses() {
-        try {
-            return ResponseEntity.ok(coursesService.getAllCourses());
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error retrieving courses: " + e.getMessage());
-        }
+    public void getAllCourses() {
+        coursesService.getAllCourses();
     }
 }

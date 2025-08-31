@@ -22,7 +22,7 @@ public class StudentController {
     }
 
     @PostMapping("/add")
-    public StudentEntity addStudent(@RequestBody StudentEntity stuedntEntity) {
-        return studentService.addStudent(stuedntEntity);
+    public StudentEntity addStudent(@RequestBody StudentDTO studentDTO) {
+        return studentService.addStudent(studentDTO);
     }
 }

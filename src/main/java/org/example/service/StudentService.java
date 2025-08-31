@@ -9,4 +9,6 @@ public interface StudentService {
     void getAllStudents();
 
     StudentEntity addStudent(StudentEntity studentEntity);
+
+    StudentEntity addStudent(StudentDTO studentDTO);
 }

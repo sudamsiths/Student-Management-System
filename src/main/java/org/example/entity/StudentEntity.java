@@ -17,4 +17,12 @@ public class StudentEntity {
     private String name;
     private String email;
     private String password;
+
+    @ManyToMany
+    @JoinTable(
+        name = "student_courses",
+        joinColumns = @JoinColumn(name = "student_id"),
+        inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private Set<CoursesEntity> courses;
 }
