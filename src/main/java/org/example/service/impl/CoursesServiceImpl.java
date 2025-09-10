@@ -7,6 +7,8 @@ import org.example.repository.CoursesRepository;
 import org.example.service.CoursesService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CoursesServiceImpl implements CoursesService  {
@@ -31,7 +33,15 @@ public class CoursesServiceImpl implements CoursesService  {
     }
 
     @Override
-    public Object getAllCourses() {
-        return courseRepository.findAll();
+    public List<CoursesDTO> getAllCourses() {
+        List<CoursesEntity> courses = courseRepository.findAll();
+        return courses.stream()
+                .map(course -> new CoursesDTO(
+                        course.getId(),
+                        course.getName(),
+                        course.getDuration(),
+                        course.getStartDate()
+                ))
+                .toList();
     }
 }

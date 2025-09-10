@@ -1,7 +1,6 @@
 package org.example.DTO;
 
 
-import jakarta.persistence.ManyToMany;
 import lombok.Data;
 
 import java.util.Set;

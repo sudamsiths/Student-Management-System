@@ -5,6 +5,7 @@ import org.example.DTO.CoursesDTO;
 import org.example.service.CoursesService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ public class CoursesController {
         }
     }
     @GetMapping("/api/getAllCourses")
-    public void getAllCourses() {
-        coursesService.getAllCourses();
+    public List<CoursesDTO> getAllCourses() {
+        return coursesService.getAllCourses();
     }
 }

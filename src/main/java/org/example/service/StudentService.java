@@ -6,13 +6,8 @@ import org.example.entity.StudentEntity;
 import java.util.List;
 
 public interface StudentService {
-    void getAllStudents();
-
-    StudentEntity addStudent(StudentEntity studentEntity);
-
-    StudentEntity addStudent(StudentDTO studentDTO);
-
+    List<StudentDTO> getAllStudents();
+    StudentDTO addStudent(StudentDTO studentDTO);
     void deleteStudent(Long id);
-
-    StudentEntity updateStudent(Long id, StudentDTO studentDTO);
+    StudentDTO updateStudent(Long id, StudentDTO studentDTO);
 }

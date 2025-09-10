@@ -3,45 +3,60 @@ package org.example.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.example.DTO.StudentDTO;
 import org.example.entity.StudentEntity;
+import org.example.entity.CoursesEntity;
 import org.example.repository.StudentRepository;
+import org.example.repository.CoursesRepository;
 import org.example.service.StudentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.example.repository.CoursesRepository;
-import org.example.entity.CoursesEntity;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class StudentServiceimpl implements StudentService {
 
     private final StudentRepository studentRepository;
-    private final ModelMapper modelMapper;
     private final CoursesRepository coursesRepository;
+    private final ModelMapper modelMapper;
 
     @Override
-    public void getAllStudents() {
-        studentRepository.findAll();
+    public List<StudentDTO> getAllStudents() {
+        List<StudentEntity> students = studentRepository.findAll();
+        return students.stream()
+                .map(this::mapToDTO)
+                .toList();
     }
 
     @Override
-    public StudentEntity addStudent(StudentEntity studentEntity) {
-        return studentRepository.save(studentEntity);
-    }
+    public StudentDTO addStudent(StudentDTO studentDTO) {
+        StudentEntity studentEntity = new StudentEntity();
+        studentEntity.setName(studentDTO.getName());
+        studentEntity.setEmail(studentDTO.getEmail());
+        studentEntity.setPassword(studentDTO.getPassword());
 
-    @Override
-    public StudentEntity addStudent(StudentDTO studentDTO) {
-        StudentEntity studentEntity = modelMapper.map(studentDTO, StudentEntity.class);
+        // Handle course assignment with database validation
         if (studentDTO.getCourseIds() != null && !studentDTO.getCourseIds().isEmpty()) {
-            HashSet<CoursesEntity> courses = new HashSet<>();
+            Set<CoursesEntity> courses = new HashSet<>();
+
             for (Long courseId : studentDTO.getCourseIds()) {
-                coursesRepository.findById(courseId).ifPresent(courses::add);
+                CoursesEntity course = coursesRepository.findById(courseId)
+                        .orElseThrow(() -> new RuntimeException("Course not found with ID: " + courseId));
+                courses.add(course);
+                System.out.println("Found and added course: " + course.getName() + " (ID: " + course.getId() + ")");
             }
+
             studentEntity.setCourses(courses);
+            System.out.println("Total courses assigned: " + courses.size());
         }
-        return studentRepository.save(studentEntity);
+
+        StudentEntity savedStudent = studentRepository.save(studentEntity);
+        System.out.println("Student saved with ID: " + savedStudent.getId());
+
+        return mapToDTO(savedStudent);
     }
 
     @Override
@@ -50,21 +65,51 @@ public class StudentServiceimpl implements StudentService {
     }
 
     @Override
-    public StudentEntity updateStudent(Long id, StudentDTO studentDTO) {
-        return studentRepository.findById(id).map(student -> {
-            student.setName(studentDTO.getName());
-            student.setEmail(studentDTO.getEmail());
-            student.setPassword(studentDTO.getPassword());
-            if (studentDTO.getCourseIds() != null && !studentDTO.getCourseIds().isEmpty()) {
-                HashSet<CoursesEntity> courses = new HashSet<>();
-                for (Long courseId : studentDTO.getCourseIds()) {
-                    coursesRepository.findById(courseId).ifPresent(courses::add);
-                }
-                student.setCourses(courses);
+    public StudentDTO updateStudent(Long id, StudentDTO studentDTO) {
+        StudentEntity existingStudent = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        existingStudent.setName(studentDTO.getName());
+        existingStudent.setEmail(studentDTO.getEmail());
+        existingStudent.setPassword(studentDTO.getPassword());
+
+        // Handle course assignment with database validation
+        if (studentDTO.getCourseIds() != null && !studentDTO.getCourseIds().isEmpty()) {
+            Set<CoursesEntity> courses = new HashSet<>();
+
+            for (Long courseId : studentDTO.getCourseIds()) {
+                CoursesEntity course = coursesRepository.findById(courseId)
+                        .orElseThrow(() -> new RuntimeException("Course not found with ID: " + courseId));
+                courses.add(course);
             }
-            return studentRepository.save(student);
-        }).orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
+
+            existingStudent.setCourses(courses);
+        } else {
+            existingStudent.setCourses(new HashSet<>());
+        }
+
+        StudentEntity updatedStudent = studentRepository.save(existingStudent);
+        return mapToDTO(updatedStudent);
     }
 
+    private StudentDTO mapToDTO(StudentEntity student) {
+        StudentDTO dto = new StudentDTO();
+        dto.setId(student.getId());
+        dto.setName(student.getName());
+        dto.setEmail(student.getEmail());
+        dto.setPassword(student.getPassword());
 
+        // Map courses to courseIds with proper null checking
+        if (student.getCourses() != null && !student.getCourses().isEmpty()) {
+            Set<Long> courseIds = student.getCourses().stream()
+                    .map(CoursesEntity::getId)
+                    .collect(Collectors.toSet());
+            dto.setCourseIds(courseIds);
+            System.out.println("Mapped courseIds: " + courseIds);
+        } else {
+            System.out.println("No courses found for student: " + student.getName());
+        }
+
+        return dto;
+    }
 }
