@@ -24,11 +24,9 @@ public class StudentServiceimpl implements StudentService {
     private final ModelMapper modelMapper;
 
     @Override
-    public List<StudentDTO> getAllStudents() {
-        List<StudentEntity> students = studentRepository.findAll();
-        return students.stream()
-                .map(this::mapToDTO)
-                .toList();
+    public List<StudentEntity> getAllStudents() {
+        List<StudentEntity> all = studentRepository.findAll();
+        return all;
     }
 
     @Override

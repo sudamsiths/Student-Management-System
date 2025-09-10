@@ -3,6 +3,7 @@ package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.DTO.StudentDTO;
+import org.example.entity.StudentEntity;
 import org.example.service.StudentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +18,9 @@ public class StudentController {
 
     private final StudentService studentService;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<StudentDTO>> getAllStudents() {
-        try {
-            List<StudentDTO> students = studentService.getAllStudents();
-            return ResponseEntity.ok(students);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(null);
-        }
+    @GetMapping("/alll")
+    public List<StudentEntity> getAllStudents() {
+            return studentService.getAllStudents();
     }
 
     @PostMapping("/add")
